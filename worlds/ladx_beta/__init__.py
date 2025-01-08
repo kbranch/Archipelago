@@ -569,8 +569,8 @@ class LinksAwakeningWorld(World):
                 "shuffle_stone_beaks",
                 "shuffle_instruments",
                 "nag_messages",
-                "overworld",
                 "hard_mode",
+                "overworld",
             ]
 
             # use the default behaviour to grab options

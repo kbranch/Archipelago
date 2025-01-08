@@ -58,10 +58,19 @@ from .patches import tradeSequence as _
 from . import hints
 
 from .patches import bank34
+from .utils import formatText
 from .roomEditor import RoomEditor, Object
 from .patches.aesthetics import rgb_to_bin, bin_to_rgb
 
 from .. import Options
+
+from BaseClasses import ItemClassification
+from ..Locations import LinksAwakeningLocation
+from ..Options import TrendyGame, Palette, MusicChangeCondition, Warps
+
+if TYPE_CHECKING:
+    from .. import LinksAwakeningWorld
+
 
 # Function to generate a final rom, this patches the rom with all required patches
 def generateRom(base_rom: bytes, args, patch_data: Dict):
@@ -149,7 +158,7 @@ def generateRom(base_rom: bytes, args, patch_data: Dict):
     if not options["rooster"]:
         patches.maptweaks.tweakMap(rom)
         patches.maptweaks.tweakBirdKeyRoom(rom)
-    if options["overworld"] == Options.Overworld.option_open_mabe:
+    if world.ladxr_settings.overworld == "openmabe":
         patches.maptweaks.openMabe(rom)
     patches.chest.fixChests(rom)
     patches.shop.fixShop(rom)
@@ -243,6 +252,8 @@ def generateRom(base_rom: bytes, args, patch_data: Dict):
         patches.core.quickswap(rom, 1)
     elif options["quickswap"] == Options.Quickswap.option_b:
         patches.core.quickswap(rom, 0)
+
+    patches.core.addBootsControls(rom, world.options.boots_controls)
 
     patches.core.addBootsControls(rom, options["boots_controls"])
 
@@ -347,6 +358,8 @@ def generateRom(base_rom: bytes, args, patch_data: Dict):
             for bucket_idx, (orig_idx, data) in enumerate(bucket):
                 rom.texts[shuffled[bucket_idx][0]] = data
 
+
+    if world.options.trendy_game != TrendyGame.option_normal:
 
     if options["trendy_game"] != Options.TrendyGame.option_normal:
 
